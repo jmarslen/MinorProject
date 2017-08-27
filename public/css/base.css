@@ -1,0 +1,33 @@
+#messages {
+  position: relative;
+  margin-right: auto;
+  max-width: 75%;
+  min-width: 50%;
+  overflow: hidden;
+  margin-bottom: 100px;
+  margin-top: 50px;
+}
+#PostForm {
+  margin-right: 10px;
+  overflow: hidden;
+  max-width: 75%;
+  min-width: 50%;
+}
+
+@media screen and (max-width: 1000px){
+ #messages {
+   margin-left: 10px;
+ }
+  #PostForm {
+   margin-left: 10px;
+ }
+}
+@media screen and (min-width: 1000px){
+ #messages {
+   margin-left: 300px !important;
+ }
+  #PostForm {
+   margin-left: 300px !important;
+
+ }
+}

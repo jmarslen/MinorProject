@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Twitter Replica</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/base.css">
+  </head>
+  <body>
+
+<!-- Top container -->
+<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  <span class="w3-bar-item w3-right"><img src="Marz-logo.png" style="width:46px"></span>
+</div>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;position:relative;" id="mySidebar"><br>
+  <div class="w3-container w3-row">
+    <div class="w3-col s4">
+      <img src="Marz-logo.png" class="w3-circle w3-margin-right" style="width:48px">
+    </div>
+    <div class="w3-col s8 w3-bar">
+      <span>Welcome, <strong id="user"></strong></span><br>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+    </div>
+  </div>
+  <hr>
+  <div class="w3-container">
+    <h5>Dashboard</h5>
+  </div>
+  <div class="w3-bar-block">
+    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <button onclick="viewProfile()" class="w3-button"><i class="fa fa-user  fa-fw"></i>  Profile</button><br/>
+    <button onclick="displayFollowing()" class="w3-button"><i class="fa fa-users fa-fw"></i>  Following</button><br/>
+    <button onclick="displayFollowers()" class="w3-button"><i class="fa fa-users fa-fw"></i>  Followers</button><br/>
+    <button onclick="getUserList()" class="w3-button"><i class="fa fa-search fa-fw"></i>  Find</button><br/>
+  </div>
+</nav>
+
+    <div id="messages"></div>
+    <div class="w3-teal w3-bottom w3-border" id="PostForm">
+      <form action="">
+        <textarea class="w3-input" placeholder="What do you have to say?" type="text" id="m"></textarea><button class="w3-button w3-teal w3-block">Post</button>
+      </form>
+    </div>
+
+    <div id="Modals">
+      <div id="profile" class="w3-modal">
+        <div class="w3-modal-content w3-animate-top">
+          <header class="w3-container w3-teal">
+             <span onclick="document.getElementById('profile').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+             <h2>My Profile</h2>
+          </header>
+            <div class="w3-container">
+              <form class="w3-container">
+              <label>Username</label>
+              <input class="w3-input" type="text" name"username" id="username">
+              <label>Full Name</label>
+              <input class="w3-input" type="text" name"fullname" id="fullname">
+              </form>
+            </div>
+          <footer class="w3-container w3-teal">Marz</footer>
+        </div>
+    </div>
+      <div id="following" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top">
+      <header class="w3-container w3-teal">
+          <span onclick="document.getElementById('following').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+          <h2>I Follow</h2>
+      </header>
+        <div id="followingContent" class="w3-container">
+        </div>
+        <div id="suggestedFollows"></div>
+      <footer class="w3-container w3-teal">Marz</footer>
+    </div>
+    </div>
+    <div id="find" class="w3-modal">
+      <div class="w3-modal-content w3-animate-top">
+          <header class="w3-container w3-teal">
+              <span onclick="document.getElementById('find').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+              <h2>User Search</h2>
+          </header>
+          <input class="w3-input" type="text" name"usersearchinput" id="usersearchinput" placeholder="Search..."><br/>
+          <div id="findContent" class="w3-container">
+          </div>
+          <br />
+          <button class="w3-button w3-teal w3-margin" onclick='saveFollowing()'>Follow</button>
+          <div id="suggestedFollows"></div>
+        <footer class="w3-container w3-teal">Marz</footer>
+      </div>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="scripts/jquery.cookie/jquery.cookie.js"></script>
+    <script type="text/javascript" src="scripts/setup.js"></script>
+    <script type="text/javascript" src="scripts/window.js"></script>
+    <script type="text/javascript" src="scripts/followList.js"></script>
+    <script>
+      //var userlist;
+      $(document).ready(function(){
+        getUsername();
+        $('#usersearchinput').keyup(function(){
+          performSearch($(this).val());
+        })
+      }) 
+
+      $(function () {
+        var socket = io();
+        var userList;
+        //Get posts for followed Users
+        var list = userfollowlist().then(function(resolve){
+            userList = resolve.value.following;
+        });
+        list.then(function(){
+          getPosts(userList);
+        })
+        
+        $('form').submit(function(){
+          let usr = getUsername();
+          socket.emit('chat message', $('#m').val(), usr);
+          writeNewPostToDB(usr, $('#m').val());
+          $('#m').val('');
+          return false;
+        });
+        socket.on('chat message', function(msg, usr){
+                $.each(userList, function(n, user){
+                   if (user.username === usr){
+                      var post = createPost(usr, msg);
+                      $('#messages').append($(post));
+                      window.scrollTo(0, document.body.scrollHeight);
+                   }
+                })
+        })
+      });
+      // Get the Sidebar
+      var mySidebar = document.getElementById("mySidebar");
+
+      // Get the DIV with overlay effect
+      var overlayBg = document.getElementById("myOverlay");
+
+      // Toggle between showing and hiding the sidebar, and add overlay effect
+      function w3_open() {
+          if (mySidebar.style.display === 'block') {
+            var post = document.getElementById("messages");
+            var pInput = document.getElementById("PostForm");
+              post.style.marginLeft = '10px';
+              pInput.style.marginLeft = '10px';
+              mySidebar.style.display = 'none';
+              overlayBg.style.display = "none";
+          } else {
+              var post = document.getElementById("messages");
+              var pInput = document.getElementById("PostForm");
+              post.style.marginLeft = '300px';
+              pInput.style.marginLeft = '300px';
+              mySidebar.style.display = 'block';
+              overlayBg.style.display = "block";
+          }
+      }
+      function w3_close() {
+        var post = document.getElementById("messages");
+        var pInput = document.getElementById("PostForm");
+              post.style.marginLeft = '10px';
+              pInput.style.marginLeft = '10px';
+          mySidebar.style.display = "none";
+          overlayBg.style.display = "none";
+      }
+      
+    </script>
+  </body>
+</html>
