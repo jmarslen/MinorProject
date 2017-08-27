@@ -67,6 +67,7 @@ function addFollower() {
         }
     })
 }
+
 var searchList;
 function performSearch(value) {
     $.each(searchList, function(n, user){
