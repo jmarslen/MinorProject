@@ -122,9 +122,10 @@ router.get('/following', function (req, res) {
 
     });
 });
-
-router.get('/addFollowing', function (req, res){
-    var addFollowing = Promise(function(resolve, reject) { 
+//Currently outputs the required data
+router.put('/addFollowing', function (req, res){
+    console.log(req.body.following.followers);
+/*     var addFollowing = Promise(function(resolve, reject) { 
         marz.get('_design/profile/_view/profile?key="' + req.query.username + '"', function(err, body) {
             if (!err && body.rows.length > 0) {
                 resolve(body.rows);  
@@ -137,7 +138,7 @@ router.get('/addFollowing', function (req, res){
     })
     addFollowing.then(function(resolve){
         console.log(resolve);
-    })
+    }) */
 
 })
 

@@ -51,13 +51,28 @@ function displayFollowing() {
     })
 
 }
-function addFollower() {
+
+function getFollowingData(){
+    var data = {followers: []};
+    var promise =  new Promise(function(reject,resolve){
+        return $('#findContent').find('input[type="checkbox"]:checked').each(function () {
+            data.followers.push({
+            "username": $(this).next().text().trim()
+        })
+        })})
+
+        promise.then(addFollowing(data));
+}
+
+function addFollowing(info) {
     var user = $.cookie('marzuser');
+    console.log(info);
     $.ajax({
         url: '/user/addFollowing',
         type: 'put',
         data: {
-            user: user
+            user: user,
+            following: info
         },
         success: function (data) {
             console.log('Following');
@@ -71,12 +86,13 @@ function addFollower() {
 var searchList;
 function performSearch(value) {
     $.each(searchList, function(n, user){
-        if (user.value.indexOf(value) >= 0 && value.length > 2){
+        if (user.value.indexOf(value) != -1 && value.length > 2){
             $('#findContent').html('');
             $('#findContent').append('<input class="w3-check w3-padding" type="checkbox"><label> ' + user.value+' </label><br />');
         } 
     })
 }
+
 
 function viewUsers() {
     return new Promise(function(resolve, reject) {
