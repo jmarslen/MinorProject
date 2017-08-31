@@ -124,22 +124,45 @@ router.get('/following', function (req, res) {
 });
 //Currently outputs the required data
 router.put('/addFollowing', function (req, res){
-    console.log(req.body.following.followers);
-/*     var addFollowing = Promise(function(resolve, reject) { 
-        marz.get('_design/profile/_view/profile?key="' + req.query.username + '"', function(err, body) {
+    var followData = req.body.following.followers;
+    var promise = new Promise(function(resolve, reject) {
+        marz.get('_design/profile/_view/profile?key="' + req.body.user + '"', function(err, body) {
             if (!err && body.rows.length > 0) {
-                resolve(body.rows);  
+                resolve(body.rows[0]);
             } else {
                 res.status(404);
                 res.send({success: false});
+                reject(err);
                 console.log(err);
             }
         });
     })
-    addFollowing.then(function(resolve){
-        console.log(resolve);
-    }) */
-
+    promise.then(function(resolve){
+        for (let i = 0; i < resolve.value.following.length; i++){
+            followData.push(resolve.value.following[i]);
+        }
+        var data = {
+            "_rev": resolve.value._rev,
+            "type": "profile",
+            "username": resolve.value.username,
+            "fullname": resolve.value.fullname,
+            "myposts": [],
+            "following":
+                followData
+            ,
+            "followers": []
+          }
+          marz.insert(data, resolve.value._id, function(err, body, header){
+              if (err){
+                  console.log(err);
+                  res.status(404);
+                  res.send({success: false});
+              } else {
+                  res.status(200);
+                  res.end();
+              }
+          });
+    })
 })
 
 router.get('/userList', function (req, res) {

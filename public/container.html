@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" type="text/css" href="scripts/sweetalert/dist/sweetalert.css">    
   </head>
   <body>
 
@@ -75,6 +76,7 @@
         <div id="followingContent" class="w3-container">
         </div>
         <div id="suggestedFollows"></div>
+        <button class="w3-button w3-margin w3-teal">Remove?</button>
       <footer class="w3-container w3-teal">Marz</footer>
     </div>
     </div>
@@ -95,9 +97,10 @@
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="scripts/jquery.cookie/jquery.cookie.js"></script>
+    <script src="scripts/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="scripts/followList.js"></script>    
     <script type="text/javascript" src="scripts/setup.js"></script>
     <script type="text/javascript" src="scripts/window.js"></script>
-    <script type="text/javascript" src="scripts/followList.js"></script>
     <script>
       //var userlist;
       $(document).ready(function(){
@@ -109,14 +112,15 @@
 
       $(function () {
         var socket = io();
+        loadPosts();
         var userList;
         //Get posts for followed Users
         var list = userfollowlist().then(function(resolve){
             userList = resolve.value.following;
         });
-        list.then(function(){
+/*         list.then(function(){
           getPosts(userList);
-        })
+        }) */
         
         $('form').submit(function(){
           let usr = getUsername();

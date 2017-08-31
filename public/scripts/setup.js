@@ -31,6 +31,15 @@ function initiatePosts(name, msg, date) {
 '</div>')
 }
 
+function loadPosts(){
+    var list = userfollowlist().then(function(resolve){
+        userList = resolve.value.following;
+    });
+    list.then(function(){
+      getPosts(userList);
+    })
+}
+
 function compare(a,b) {
     if (a.value.date < b.value.date)
         return -1;
@@ -40,6 +49,7 @@ function compare(a,b) {
 }
 
 function getPosts(userList) {
+    $('#messages').html('');
     $.ajax({
         url: '/post/getPost',
         type: 'get',

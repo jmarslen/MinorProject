@@ -66,7 +66,6 @@ function getFollowingData(){
 
 function addFollowing(info) {
     var user = $.cookie('marzuser');
-    console.log(info);
     $.ajax({
         url: '/user/addFollowing',
         type: 'put',
@@ -75,7 +74,14 @@ function addFollowing(info) {
             following: info
         },
         success: function (data) {
-            console.log('Following');
+            document.getElementById('find').style.display='none';
+            loadPosts();
+            swal({
+                title: "Success!",
+                text: "Users Added!",
+                type: "success",
+                confirmButtonText: "WooHoo..."
+              });
         },
         error: function (err) {
             $('#successText').text("Following failed");
