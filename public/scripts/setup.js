@@ -1,12 +1,13 @@
 function createPost(name, msg) {
     var date = new Date().toLocaleString();
+    var messg = messageValidation(msg);
     return '<div class="w3-card-4 w3-margin">' + 
 '<header class="w3-container w3-border">' +
   '<h1>' + name + '</h1>' +
   '<p class="w3-tiny w3-right">' + date + '</p>' +
 '</header>' +
 '<div class="w3-container w3-border">' +
-'  <p>' + msg + '</p>' +
+'  <p>' + messg + '</p>' +
 '</div>' +
 '<footer class="w3-container w3-border">' +
     '<h5 style="float: left">Like |</h5>' +
@@ -16,13 +17,14 @@ function createPost(name, msg) {
 }
 
 function initiatePosts(name, msg, date) {
+    var messg = messageValidation(msg);
     $('#messages').append('<div class="w3-card-4 w3-margin">' + 
 '<header class="w3-container w3-border">' +
   '<h1>' + name + '</h1>' +
   '<p class="w3-tiny w3-right">' + date + '</p>' +
 '</header>' +
 '<div class="w3-container w3-border">' +
-'  <p>' + msg + '</p>' +
+'  <p>' + messg + '</p>' +
 '</div>' +
 '<footer class="w3-container w3-border">' +
     '<h5 style="float: left">Like |</h5>' +
@@ -101,4 +103,11 @@ function writeNewPostToDB(usr, message) {
             $('#successText').text("Login failed");
         }
     })
+}
+function messageValidation(msg){
+    //May need to reference this as it is not my regex
+    var urlRegex = /((?:(http|https|Http|Https|rtsp|Rtsp):\/\/(?:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,64}(?:\:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,25})?\@)?)?((?:(?:[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}\.)+(?:(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])|(?:biz|b[abdefghijmnorstvwyz])|(?:cat|com|coop|c[acdfghiklmnoruvxyz])|d[ejkmoz]|(?:edu|e[cegrstu])|f[ijkmor]|(?:gov|g[abdefghilmnpqrstuwy])|h[kmnrtu]|(?:info|int|i[delmnoqrst])|(?:jobs|j[emop])|k[eghimnrwyz]|l[abcikrstuvy]|(?:mil|mobi|museum|m[acdghklmnopqrstuvwxyz])|(?:name|net|n[acefgilopruz])|(?:org|om)|(?:pro|p[aefghklmnrstwy])|qa|r[eouw]|s[abcdeghijklmnortuvyz]|(?:tel|travel|t[cdfghjklmnoprtvwz])|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw]))|(?:(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])))(?:\:\d{1,5})?)(\/(?:(?:[a-zA-Z0-9\;\/\?\:\@\&\=\#\~\-\.\+\!\*\'\(\)\,\_])|(?:\%[a-fA-F0-9]{2}))*)?(?:\b|$)/gi;
+    return msg.replace(urlRegex, function(url) {
+        return '<a href="' + url + '" target="_blank">' + url + '</a>';
+    });
 }
