@@ -165,6 +165,54 @@ router.put('/addFollowing', function (req, res){
     })
 })
 
+router.put('/removeFollowing', function(req, res){
+    var followData = req.body.following.followers;
+    var promise = new Promise(function(resolve, reject) {
+        marz.get('_design/profile/_view/profile?key="' + req.body.user + '"', function(err, body) {
+            if (!err && body.rows.length > 0) {
+                resolve(body.rows[0]);
+            } else {
+                res.status(404);
+                res.send({success: false});
+                reject(err);
+                console.log(err);
+            }
+        });
+    })
+    promise.then(function(resolve){
+        var currentData = resolve.value.following;
+        followData.forEach(function(value){
+            for (let i = 0; i < currentData.length; i++){
+                if (value.username === currentData[i].username){
+                    currentData.splice(i,1);
+                }
+            }
+        }) 
+
+        var data = {
+            "_rev": resolve.value._rev,
+            "type": "profile",
+            "username": resolve.value.username,
+            "fullname": resolve.value.fullname,
+            "myposts": [],
+            "following":
+                currentData
+            ,
+            "followers": []
+          }
+          marz.insert(data, resolve.value._id, function(err, body, header){
+              if (err){
+                  console.log(err);
+                  res.status(404);
+                  res.send({success: false});
+              } else {
+                  res.status(200);
+                  res.end();
+              }
+          });
+    })
+})
+
 router.get('/userList', function (req, res) {
     marz.get('_design/profile/_view/users', function(err, body) {
             if (!err && body.rows.length > 0) {

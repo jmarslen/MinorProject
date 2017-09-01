@@ -52,6 +52,43 @@ function displayFollowing() {
 
 }
 
+function getRemoveFollowData() {
+    var data = {followers: []};
+    var promise =  new Promise(function(reject,resolve){
+        return $('#followingContent').find('input[type="checkbox"]:checked').each(function () {
+            data.followers.push({
+            "username": $(this).next().text().trim()
+        })
+        })})
+        promise.then(removeFollowing(data));
+}
+
+function removeFollowing(info){
+    var user = $.cookie('marzuser');
+    $.ajax({
+        url: '/user/removeFollowing',
+        type: 'put',
+        data: {
+            user: user,
+            following: info
+        },
+        success: function (data) {
+            document.getElementById('following').style.display='none';
+            loadPosts();
+            swal({
+                title: "Success!",
+                text: "Users Removed!",
+                type: "success",
+                confirmButtonText: "WooHoo..."
+              });
+        },
+        error: function (err) {
+            $('#successText').text("Following failed");
+        }
+    })
+
+}
+
 function getFollowingData(){
     var data = {followers: []};
     var promise =  new Promise(function(reject,resolve){

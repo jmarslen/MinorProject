@@ -76,7 +76,7 @@
         <div id="followingContent" class="w3-container">
         </div>
         <div id="suggestedFollows"></div>
-        <button class="w3-button w3-margin w3-teal">Remove?</button>
+        <button class="w3-button w3-margin w3-teal" onclick="getRemoveFollowData()">Remove?</button>
       <footer class="w3-container w3-teal">Marz</footer>
     </div>
     </div>
@@ -118,9 +118,6 @@
         var list = userfollowlist().then(function(resolve){
             userList = resolve.value.following;
         });
-/*         list.then(function(){
-          getPosts(userList);
-        }) */
         
         $('form').submit(function(){
           let usr = getUsername();
@@ -133,8 +130,8 @@
                 $.each(userList, function(n, user){
                    if (user.username === usr){
                       var post = createPost(usr, msg);
-                      $('#messages').append($(post));
-                      window.scrollTo(0, document.body.scrollHeight);
+                      $('#messages').prepend($(post));
+                      //window.scrollTo(0, document.body.scrollHeight);
                    }
                 })
         })
