@@ -43,9 +43,11 @@ function loadPosts(){
 }
 
 function compare(a,b) {
-    if (a.value.date < b.value.date)
+    var dateA = new Date(a.value.date);
+    var dateB = new Date(b.value.date);
+    if (dateA < dateB)
         return -1;
-    if (a.value.date > b.value.date)
+    if (dateA > dateB)
         return 1;
     return 0;
 }
@@ -79,11 +81,31 @@ function getPosts(userList) {
 function getUsername() {
     var user = $.cookie('marzuser');
     if (user !== undefined) {
-        $('#user').html(user);
+        //$('#user').html(user);
          return user;
     } else {
         window.location = 'index.html';
     }
+}
+
+function getFullName() {
+    var username = $.cookie('marzuser');
+    $.ajax({
+        url: '/user/userProfile',
+        type: 'get',
+        data: {
+            username: username
+        },
+        success: function (data) {
+            $('#user').html(data.value.fullname);
+            //$('#fullname').val(data.value.fullname);
+            //document.getElementById('profile').style.display='block';
+            return data.value.fullname;
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    })
 }
 
 function writeNewPostToDB(usr, message) {
@@ -110,4 +132,13 @@ function messageValidation(msg){
     return msg.replace(urlRegex, function(url) {
         return '<a href="' + url + '" target="_blank">' + url + '</a>';
     });
+}
+function logout() {
+    $.removeCookie('marzuser');
+    window.location = 'index.html';
+}
+function newPost() {
+    $("html, body").animate({ scrollTop: 0 }, "slow");
+    $("#newPosts").hide();
+    return false;
 }

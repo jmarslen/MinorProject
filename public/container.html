@@ -11,48 +11,46 @@
   <body>
 
 <!-- Top container -->
-<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+<div class="w3-bar w3-top w3-black w3-large" id="top" style="z-index:4">
   <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
-  <span class="w3-bar-item w3-right"><img src="Marz-logo.png" style="width:46px"></span>
+  <span class="w3-bar-item w3-right w3-opacity"><img src="bird2.png" style="width:46px"></span>
 </div>
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;position:relative;" id="mySidebar"><br>
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left w3-border w3-card-4" style="z-index:3;width:300px;position:relative;" id="mySidebar"><br>
   <div class="w3-container w3-row">
     <div class="w3-col s4">
-      <img src="Marz-logo.png" class="w3-circle w3-margin-right" style="width:48px">
+      <img src="bird2.png" class="w3-circle w3-margin-right w3-opacity" style="width:48px">
     </div>
     <div class="w3-col s8 w3-bar">
       <span>Welcome, <strong id="user"></strong></span><br>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
+<!--       <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
       <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a> -->
     </div>
   </div>
   <hr>
-  <div class="w3-container">
-    <h5>Dashboard</h5>
-  </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
     <button onclick="viewProfile()" class="w3-button"><i class="fa fa-user  fa-fw"></i>  Profile</button><br/>
     <button onclick="displayFollowing()" class="w3-button"><i class="fa fa-users fa-fw"></i>  Following</button><br/>
     <button onclick="displayFollowers()" class="w3-button"><i class="fa fa-users fa-fw"></i>  Followers</button><br/>
     <button onclick="getUserList()" class="w3-button"><i class="fa fa-search fa-fw"></i>  Find</button><br/>
+    <button onclick="logout()" class="w3-button"><i class="fa fa-power-off fa-fw"></i>  Logout</button><br />
   </div>
 </nav>
-
+    <button class="w3-blue w3-button w3-round-xxlarge w3-hover-black" id="newPosts" onclick="newPost()" style="position: fixed; top: 100px; margin-left: 50%; z-index: 15; display: none;">New Posts</button>
     <div id="messages"></div>
-    <div class="w3-teal w3-bottom w3-border" id="PostForm">
+    <div class="w3-blue w3-bottom w3-border" id="PostForm">
       <form action="">
-        <textarea class="w3-input" placeholder="What do you have to say?" type="text" id="m" maxlength="140"></textarea><button class="w3-button w3-teal w3-block">Post</button>
+        <textarea class="w3-input" placeholder="What do you have to say?" type="text" id="m" maxlength="140"></textarea><button class="w3-button w3-blue w3-block">Post</button>
       </form>
     </div>
 
     <div id="Modals">
       <div id="profile" class="w3-modal">
         <div class="w3-modal-content w3-animate-top">
-          <header class="w3-container w3-teal">
+          <header class="w3-container w3-blue">
              <span onclick="document.getElementById('profile').style.display='none'" class="w3-button w3-display-topright">&times;</span>
              <h2>My Profile</h2>
           </header>
@@ -64,25 +62,25 @@
               <input class="w3-input" type="text" name"fullname" id="fullname" disabled>
               </form>
             </div>
-          <footer class="w3-container w3-teal">Marz</footer>
+          <footer class="w3-container w3-blue">TWITBOOK</footer>
         </div>
     </div>
       <div id="following" class="w3-modal">
     <div class="w3-modal-content w3-animate-top">
-      <header class="w3-container w3-teal">
+      <header class="w3-container w3-blue">
           <span onclick="document.getElementById('following').style.display='none'" class="w3-button w3-display-topright">&times;</span>
           <h2>I Follow</h2>
       </header>
         <div id="followingContent" class="w3-container">
         </div>
         <div id="suggestedFollows"></div>
-        <button class="w3-button w3-margin w3-teal" onclick="getRemoveFollowData()">Remove?</button>
-      <footer class="w3-container w3-teal">Marz</footer>
+        <button class="w3-button w3-margin w3-blue" onclick="getRemoveFollowData()">Remove?</button>
+      <footer class="w3-container w3-blue">TWITBOOK</footer>
     </div>
     </div>
     <div id="find" class="w3-modal">
       <div class="w3-modal-content w3-animate-top">
-          <header class="w3-container w3-teal">
+          <header class="w3-container w3-blue">
               <span onclick="document.getElementById('find').style.display='none'" class="w3-button w3-display-topright">&times;</span>
               <h2>User Search</h2>
           </header>
@@ -90,9 +88,9 @@
           <div id="findContent" class="w3-container">
           </div>
           <br />
-          <button class="w3-button w3-teal w3-margin" onclick='getFollowingData()'>Follow</button>
+          <button class="w3-button w3-blue w3-margin" onclick='getFollowingData()'>Follow</button>
           <div id="suggestedFollows"></div>
-        <footer class="w3-container w3-teal">Marz</footer>
+        <footer class="w3-container w3-blue">TWITBOOK</footer>
       </div>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -105,11 +103,20 @@
       //var userlist;
       $(document).ready(function(){
         getUsername();
+        getFullName();
         $('#usersearchinput').on('keyup', function(){
           performSearch($(this).val());
         })
       }) 
-
+/*       $(function(){
+        var pos = $(document).scrollTop();
+        $(document).scroll(function() {
+          console.log(pos);
+            if (pos){
+            $("#newPosts").hide();
+          }
+        })
+      }) */
       $(function () {
         var socket = io();
         loadPosts();
@@ -129,8 +136,10 @@
         socket.on('chat message', function(msg, usr){
                 $.each(userList, function(n, user){
                    if (user.username === usr){
+                      $("#newPosts").show();
                       var post = createPost(usr, msg);
                       $('#messages').prepend($(post));
+                      
                       //window.scrollTo(0, document.body.scrollHeight);
                    }
                 })
