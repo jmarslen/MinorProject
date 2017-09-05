@@ -3,7 +3,8 @@ function createPost(name, msg) {
     var messg = messageValidation(msg);
     return '<div class="w3-card-4 w3-margin">' + 
 '<header class="w3-container w3-border">' +
-  '<h1>' + name + '</h1>' +
+'<img src="Profile/' + name + '.jpg" alt="Avatar" class="w3-left w3-circle w3-margin" style="width: 80px; height: 80px;">' +
+  '<h1 class="w3-margin">' + name + '</h1>' +
   '<p class="w3-tiny w3-right">' + date + '</p>' +
 '</header>' +
 '<div class="w3-container w3-border">' +
@@ -20,7 +21,8 @@ function initiatePosts(name, msg, date) {
     var messg = messageValidation(msg);
     $('#messages').append('<div class="w3-card-4 w3-margin">' + 
 '<header class="w3-container w3-border">' +
-  '<h1>' + name + '</h1>' +
+'<img src="Profile/' + name + '.jpg" alt="Avatar" class="w3-left w3-circle w3-margin" style="width: 80px; height: 80px;">' +
+  '<h1 class="w3-margin">' + name + '</h1>' +
   '<p class="w3-tiny w3-right">' + date + '</p>' +
 '</header>' +
 '<div class="w3-container w3-border">' +
@@ -128,7 +130,7 @@ function writeNewPostToDB(usr, message) {
 }
 function messageValidation(msg){
     //May need to reference this as it is not my regex
-    var urlRegex = /((?:(http|https|Http|Https|rtsp|Rtsp):\/\/(?:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,64}(?:\:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,25})?\@)?)?((?:(?:[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}\.)+(?:(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])|(?:biz|b[abdefghijmnorstvwyz])|(?:cat|com|coop|c[acdfghiklmnoruvxyz])|d[ejkmoz]|(?:edu|e[cegrstu])|f[ijkmor]|(?:gov|g[abdefghilmnpqrstuwy])|h[kmnrtu]|(?:info|int|i[delmnoqrst])|(?:jobs|j[emop])|k[eghimnrwyz]|l[abcikrstuvy]|(?:mil|mobi|museum|m[acdghklmnopqrstuvwxyz])|(?:name|net|n[acefgilopruz])|(?:org|om)|(?:pro|p[aefghklmnrstwy])|qa|r[eouw]|s[abcdeghijklmnortuvyz]|(?:tel|travel|t[cdfghjklmnoprtvwz])|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw]))|(?:(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])))(?:\:\d{1,5})?)(\/(?:(?:[a-zA-Z0-9\;\/\?\:\@\&\=\#\~\-\.\+\!\*\'\(\)\,\_])|(?:\%[a-fA-F0-9]{2}))*)?(?:\b|$)/gi;
+    var urlRegex = /((?:(http|https|Http|Https|rtsp|Rtsp|file|rdp|ftp|Ftp):\/\/(?:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,64}(?:\:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,25})?\@)?)?((?:(?:[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}\.)+(?:(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])|(?:biz|b[abdefghijmnorstvwyz])|(?:cat|com|coop|c[acdfghiklmnoruvxyz])|d[ejkmoz]|(?:edu|e[cegrstu])|f[ijkmor]|(?:gov|g[abdefghilmnpqrstuwy])|h[kmnrtu]|(?:info|int|i[delmnoqrst])|(?:jobs|j[emop])|k[eghimnrwyz]|l[abcikrstuvy]|(?:mil|mobi|museum|m[acdghklmnopqrstuvwxyz])|(?:name|net|n[acefgilopruz])|(?:org|om)|(?:pro|p[aefghklmnrstwy])|qa|r[eouw]|s[abcdeghijklmnortuvyz]|(?:tel|travel|t[cdfghjklmnoprtvwz])|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw]))|(?:(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])))(?:\:\d{1,5})?)(\/(?:(?:[a-zA-Z0-9\;\/\?\:\@\&\=\#\~\-\.\+\!\*\'\(\)\,\_])|(?:\%[a-fA-F0-9]{2}))*)?(?:\b|$)/gi;
     return msg.replace(urlRegex, function(url) {
         return '<a href="' + url + '" target="_blank">' + url + '</a>';
     });
@@ -141,4 +143,30 @@ function newPost() {
     $("html, body").animate({ scrollTop: 0 }, "slow");
     $("#newPosts").hide();
     return false;
+}
+function uploadFile() {
+    var user = $.cookie('marzuser');
+    var data = new FormData($('#uploadForm')[0]);
+    data.append('username', $('#username').val());
+    $.ajax({
+        url: '/upload',
+        type: 'POST',
+        encType: 'multipart/form-data',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function() {
+            $('#profile').hide();
+            swal({
+                title: "Success!",
+                text: "Profile Pic Added!",
+                type: "success",
+                confirmButtonText: "WooHoo..."
+              });
+        },
+        error: function() {
+
+        }
+    });
 }

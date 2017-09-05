@@ -42,7 +42,7 @@
     <button class="w3-blue w3-button w3-round-xxlarge w3-hover-black" id="newPosts" onclick="newPost()" style="position: fixed; top: 100px; margin-left: 50%; z-index: 15; display: none;">New Posts</button>
     <div id="messages"></div>
     <div class="w3-blue w3-bottom w3-border" id="PostForm">
-      <form action="">
+      <form action="" id="form">
         <textarea class="w3-input" placeholder="What do you have to say?" type="text" id="m" maxlength="140"></textarea><button class="w3-button w3-blue w3-block">Post</button>
       </form>
     </div>
@@ -55,12 +55,16 @@
              <h2>My Profile</h2>
           </header>
             <div class="w3-container">
-              <form class="w3-container">
-              <label>Username</label>
-              <input class="w3-input" type="text" name"username" id="username" disabled>
-              <label>Full Name</label>
-              <input class="w3-input" type="text" name"fullname" id="fullname" disabled>
-              </form>
+              <form ref='uploadForm' id='uploadForm'>
+                <br />
+                <label class="w3-margin">Username</label>
+                <input class="w3-input w3-margin" type="text" name"username" id="username" disabled>
+                <label class="w3-margin">Full Name</label>
+                <input class="w3-input w3-margin" type="text" name"fullname" id="fullname" disabled>
+                <label class="w3-margin">Profile Picture (Must be .jpg)</label><br/><br/>
+                <input class="w3-button" type="file" name="sampleFile" /> <br /><br />
+                <input class="w3-button w3-blue w3-margin" type='submit' value='Upload!' />
+            </form>  
             </div>
           <footer class="w3-container w3-blue">TWITBOOK</footer>
         </div>
@@ -126,12 +130,19 @@
             userList = resolve.value.following;
         });
         
-        $('form').submit(function(){
-          let usr = getUsername();
-          socket.emit('chat message', $('#m').val(), usr);
-          writeNewPostToDB(usr, $('#m').val());
-          $('#m').val('');
+        $('#uploadForm').submit(function(){
+          uploadFile();
           return false;
+        });
+
+        $('#form').submit(function(){
+          let usr = getUsername();
+          if ($('#m').val().length > 0){
+            socket.emit('chat message', $('#m').val(), usr);
+            writeNewPostToDB(usr, $('#m').val());
+            $('#m').val('');
+            return false;
+          }
         });
         socket.on('chat message', function(msg, usr){
                 $.each(userList, function(n, user){

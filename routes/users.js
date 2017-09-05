@@ -10,6 +10,9 @@ var path = require('path');
 var marz = nano.db.use('db');
 var CryptoJS = require("crypto-js");
 var router = express.Router();
+var formidable = require("formidable");
+var fs = require("fs");
+const fileUpload = require('express-fileupload');
 //bottom of page
 
 var encrypt = function(string) {
@@ -61,6 +64,22 @@ router.get('/user', function (req, res) {
 
     });
 });
+
+router.get('/fileupload', function(req, res){
+    if (!req.files)
+        return res.status(400).send('No files were uploaded.');
+     
+      // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+      let sampleFile = req.files.sampleFile;
+     
+      // Use the mv() method to place the file somewhere on your server
+      sampleFile.mv('/public/filename.jpg', function(err) {
+        if (err)
+          return res.status(500).send(err);
+     
+        res.send('File uploaded!');
+      });
+})
 
 router.get('/userExists', function (req, res) {
     marz.get('_design/user/_view/users?key="' + req.query.username + '"', function(err, body) {
