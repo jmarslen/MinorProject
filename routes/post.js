@@ -27,6 +27,8 @@ router.get('/newPost', function (req, res) {
     marz.insert({
     "type": "post",
     "username": req.query.pUsername,
+    "fullname": req.query.pName,
+    "profileImage": req.query.pImage,
     "date": req.query.pDate,
     "post": {
         "message": req.query.pMessage,

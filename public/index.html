@@ -45,13 +45,15 @@
                    <h2>Create Profile</h2>
                 </header>
                   <div class="w3-container">
-                    <form class="w3-container">
-                    <label>Username</label>
+                    <form class="w3-container" ref='newForm' id='newForm'>
+                    <label>Username (Required)</label>
                     <input class="w3-input" type="text" name"newusername" id="newusername">
-                    <label>Full Name</label>
+                    <label>Full Name (Required)</label>
                     <input class="w3-input" type="text" name"newfullname" id="newfullname">
-                    <label>Password</label>
-                    <input class="w3-input" type="password" name"newpassword" id="newpassword">
+                    <label>Password (Required)</label>
+                    <input class="w3-input" type="password" name"newpassword" id="newpassword"><br /><br />
+                    <label>Profile Picture (Required)</label>
+                    <input class="w3-button" type="file" name="sampleFile" id="sampleFile"/> <br /><br />
                     <input class="w3-btn w3-blue w3-margin" type="button" class="btn-primary" value="Sign up" onClick="createUser()">
                     </form>
                   </div>

@@ -30,7 +30,8 @@ var decrypt = function(string) {
 }
 
 var createNewProfile = function(username, fullname){
-    marz.insert({
+   return new Promise(function(resolve, reject){
+        marz.insert({
         "type": "profile",
         "username": username,
         "fullname": fullname,
@@ -39,11 +40,13 @@ var createNewProfile = function(username, fullname){
         "followers": []
 }, null, function (err, body) {
         if (err) {
+            reject();
             console.log(err);
         } else {
-            
+            resolve();
         }
     })
+   })
 }
 
 router.get('/user', function (req, res) {
@@ -64,22 +67,6 @@ router.get('/user', function (req, res) {
 
     });
 });
-
-router.get('/fileupload', function(req, res){
-    if (!req.files)
-        return res.status(400).send('No files were uploaded.');
-     
-      // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-      let sampleFile = req.files.sampleFile;
-     
-      // Use the mv() method to place the file somewhere on your server
-      sampleFile.mv('/public/filename.jpg', function(err) {
-        if (err)
-          return res.status(500).send(err);
-     
-        res.send('File uploaded!');
-      });
-})
 
 router.get('/userExists', function (req, res) {
     marz.get('_design/user/_view/users?key="' + req.query.username + '"', function(err, body) {
@@ -109,9 +96,10 @@ router.get('/addUser', function (req, res) {
             res.status(404);
             res.end();
         } else {
-            createNewProfile(req.query.username, req.query.fullname);
-            res.status(200);
-            res.end();
+            var createProfile = createNewProfile(req.query.username, req.query.fullname).then(function(resove){
+                res.status(200);
+                res.end();
+            });
         }
     })
 });
@@ -165,6 +153,7 @@ router.put('/addFollowing', function (req, res){
             "type": "profile",
             "username": resolve.value.username,
             "fullname": resolve.value.fullname,
+            "profileImage": resolve.value.profileImage,
             "myposts": [],
             "following":
                 followData

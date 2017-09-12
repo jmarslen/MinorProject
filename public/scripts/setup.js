@@ -1,14 +1,15 @@
-function createPost(name, msg) {
+function createPost(name, msg, fullname, image) {
     var date = new Date().toLocaleString();
     var messg = messageValidation(msg);
     return '<div class="w3-card-4 w3-margin">' + 
 '<header class="w3-container w3-border">' +
-'<img src="Profile/' + name + '.jpg" alt="Avatar" class="w3-left w3-circle w3-margin" style="width: 80px; height: 80px;">' +
-  '<h1 class="w3-margin">' + name + '</h1>' +
+'<img src="Profile/' + image + '" alt="Avatar" class="w3-left w3-circle w3-margin" style="width: 80px; height: 80px;">' +
+  '<h3 class="w3-margin">' + fullname + '</h3>' +
+  '<p class="w3-tiny w3-left">' + name + '</p>' +
   '<p class="w3-tiny w3-right">' + date + '</p>' +
 '</header>' +
-'<div class="w3-container w3-border">' +
-'  <p>' + messg + '</p>' +
+'<div class="w3-container w3-border w3-light-gray">' +
+'  <h2>' + messg + '</h2>' +
 '</div>' +
 '<footer class="w3-container w3-border">' +
     '<h5 style="float: left">Like |</h5>' +
@@ -17,16 +18,17 @@ function createPost(name, msg) {
 '</div>'
 }
 
-function initiatePosts(name, msg, date) {
+function initiatePosts(name, msg, date, fullname, image) {
     var messg = messageValidation(msg);
     $('#messages').append('<div class="w3-card-4 w3-margin">' + 
 '<header class="w3-container w3-border">' +
-'<img src="Profile/' + name + '.jpg" alt="Avatar" class="w3-left w3-circle w3-margin" style="width: 80px; height: 80px;">' +
-  '<h1 class="w3-margin">' + name + '</h1>' +
+'<img src="Profile/' + image + '" alt="Avatar" class="w3-left w3-circle w3-margin" style="width: 80px; height: 80px;">' +
+  '<h3 class="w3-margin">' + fullname + '</h3>' +
+  '<p class="w3-tiny w3-left">' + name + '</p>' +
   '<p class="w3-tiny w3-right">' + date + '</p>' +
 '</header>' +
-'<div class="w3-container w3-border">' +
-'  <p>' + messg + '</p>' +
+'<div class="w3-container w3-border w3-light-gray">' +
+'  <h2>' + messg + '</h2>' +
 '</div>' +
 '<footer class="w3-container w3-border">' +
     '<h5 style="float: left">Like |</h5>' +
@@ -67,9 +69,11 @@ function getPosts(userList) {
                var usr = post.value.username;
                var msg = post.value.post.message;
                var date = post.value.date;
+               var fullname = post.value.fullname;
+               var image = post.value.profileImage;
                $.each(userList, function(n, user){
                    if (user.username === usr){
-                     initiatePosts(usr, msg, date)
+                     initiatePosts(usr, msg, date, fullname, image)
                    }
                })
            })
@@ -90,6 +94,35 @@ function getUsername() {
     }
 }
 
+function getName() {
+    let name = $.cookie('marzname');
+    if (name !== undefined){
+        return name;
+    } else {
+        return window.location = 'index.html'
+    }
+}
+
+function getProfilePic() {
+    var username = $.cookie('marzuser');
+    return new Promise(function(resolve, reject) {
+    $.ajax({
+        url: '/user/userProfile',
+        type: 'get',
+        data: {
+            username: username
+        },
+        success: function (data) {
+            console.log(data);
+            resolve(data.value.profileImage);
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    })
+})
+}
+
 function getFullName() {
     var username = $.cookie('marzuser');
     $.ajax({
@@ -99,6 +132,8 @@ function getFullName() {
             username: username
         },
         success: function (data) {
+            console.log(data);
+
             $('#user').html(data.value.fullname);
             //$('#fullname').val(data.value.fullname);
             //document.getElementById('profile').style.display='block';
@@ -110,7 +145,7 @@ function getFullName() {
     })
 }
 
-function writeNewPostToDB(usr, message) {
+function writeNewPostToDB(usr, message, name, image) {
     var date = new Date().toLocaleString();
         $.ajax({
         url: '/post/newPost',
@@ -118,7 +153,9 @@ function writeNewPostToDB(usr, message) {
         data: {
             pUsername: usr,
             pMessage: message,
-            pDate: date
+            pDate: date,
+            pName: name,
+            pImage: image
         },
         success: function (data) {
             console.log('Posted');
@@ -144,6 +181,7 @@ function newPost() {
     $("#newPosts").hide();
     return false;
 }
+
 function uploadFile() {
     var user = $.cookie('marzuser');
     var data = new FormData($('#uploadForm')[0]);

@@ -24,9 +24,6 @@
     </div>
     <div class="w3-col s8 w3-bar">
       <span>Welcome, <strong id="user"></strong></span><br>
-<!--       <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a> -->
     </div>
   </div>
   <hr>
@@ -104,7 +101,6 @@
     <script type="text/javascript" src="scripts/setup.js"></script>
     <script type="text/javascript" src="scripts/window.js"></script>
     <script>
-      //var userlist;
       $(document).ready(function(){
         getUsername();
         getFullName();
@@ -112,24 +108,20 @@
           performSearch($(this).val());
         })
       }) 
-/*       $(function(){
-        var pos = $(document).scrollTop();
-        $(document).scroll(function() {
-          console.log(pos);
-            if (pos){
-            $("#newPosts").hide();
-          }
-        })
-      }) */
+      var userImage;
       $(function () {
         var socket = io();
         loadPosts();
         var userList;
+
         //Get posts for followed Users
         var list = userfollowlist().then(function(resolve){
             userList = resolve.value.following;
         });
         
+        var pic = getProfilePic().then(function(resolve){
+          userImage = resolve;
+        })
         $('#uploadForm').submit(function(){
           uploadFile();
           return false;
@@ -137,21 +129,22 @@
 
         $('#form').submit(function(){
           let usr = getUsername();
+          let name = getName();
+          console.log(userImage);
           if ($('#m').val().length > 0){
-            socket.emit('chat message', $('#m').val(), usr);
-            writeNewPostToDB(usr, $('#m').val());
+            socket.emit('chat message', $('#m').val(), usr, name, userImage);
+            writeNewPostToDB(usr, $('#m').val(), name, userImage);
             $('#m').val('');
             return false;
           }
         });
-        socket.on('chat message', function(msg, usr){
+
+        socket.on('chat message', function(msg, usr, name, userImage){
                 $.each(userList, function(n, user){
                    if (user.username === usr){
                       $("#newPosts").show();
-                      var post = createPost(usr, msg);
+                      var post = createPost(usr, msg, name, userImage);
                       $('#messages').prepend($(post));
-                      
-                      //window.scrollTo(0, document.body.scrollHeight);
                    }
                 })
         })
