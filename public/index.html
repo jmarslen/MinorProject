@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Marz</title>
+    <title>TWITBOOK</title>
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/bootstrap.css" />
     <link rel="stylesheet" href="css/bootstrap-theme.css" />
@@ -24,43 +24,45 @@
 </head>
 
 <body>
-    <div id="loginHeading">
-        
-  </div>
-    <div class="w3-container">
-        <img src="Marz-logo.PNG" class="w3-display-topmiddle w3-margin" alt="Marz logo" style="max-width:400px;max-height:400px;">
+    <div id="loginHeading" class="w3-black" style="padding-top: -100px;">
+        <h1 class="w3-padding-32 w3-wide w3-opacity w3-center" style="text-shadow:1px 1px 0 #FFF">TWITBOOK</h1>    
     </div>
-    <div id="loginFormDiv" class="w3-display-bottommiddle">
+    <div id="loginFormDiv" class="w3-margin w3-display-bottommiddle" style="min-width: 800px;max-width: 800px; margin-left: auto; margin-right:auto;float: left;">
         <form id="loginForm">
             Username:<br /><br />
-            <input class="w3-input" type="text" name="username" placeholder="Harry Potter"><br/><br /> Password:<br/><br/>
-            <input class="w3-input" type="password" name="password" placeholder="******"><br><br>
-            <input class="w3-btn w3-teal" type="button" class="btn-primary" value="Submit" onClick="userCheck(username.value, password.value)">
-            <input class="w3-btn w3-teal" type="button" class="btn-primary" value="Sign up" onClick="displaySignup()">
+            <input class="w3-input w3-round w3-border" type="text" name="username" placeholder="Username"><br/><br /> Password:<br/><br/>
+            <input class="w3-input w3-round w3-border" type="password" name="password" placeholder="******"><br><br>
+            <input class="w3-btn w3-blue" type="button" class="btn-primary" value="Submit" onClick="userCheck(username.value, password.value)">
+            <input class="w3-btn w3-blue" type="button" class="btn-primary" value="Sign up" onClick="displaySignup()">
         </form>
         <div id='success'><h3 id='successText'></h3></div>
     </div>
     <div id="Modals">
             <div id="createProfile" class="w3-modal">
               <div class="w3-modal-content w3-animate-top">
-                <header class="w3-container w3-teal">
+                <header class="w3-container w3-blue">
                    <span onclick="document.getElementById('createProfile').style.display='none'" class="w3-button w3-display-topright">&times;</span>
                    <h2>Create Profile</h2>
                 </header>
                   <div class="w3-container">
-                    <form class="w3-container">
-                    <label>Username</label>
+                    <form class="w3-container" ref='newForm' id='newForm'>
+                    <label>Username (Required)</label>
                     <input class="w3-input" type="text" name"newusername" id="newusername">
-                    <label>Full Name</label>
+                    <label>Full Name (Required)</label>
                     <input class="w3-input" type="text" name"newfullname" id="newfullname">
-                    <label>Password</label>
-                    <input class="w3-input" type="password" name"newpassword" id="newpassword">
-                    <input class="w3-btn w3-teal w3-margin" type="button" class="btn-primary" value="Sign up" onClick="createUser()">
+                    <label>Password (Required)</label>
+                    <input class="w3-input" type="password" name"newpassword" id="newpassword"><br /><br />
+                    <label>Profile Picture (Required)</label>
+                    <input class="w3-button" type="file" name="sampleFile" id="sampleFile"/> <br /><br />
+                    <input class="w3-btn w3-blue w3-margin" type="button" class="btn-primary" value="Sign up" onClick="createUser()">
                     </form>
                   </div>
-                <footer class="w3-container w3-teal">Marz</footer>
+                <footer class="w3-container w3-blue">TWITBOOK</footer>
               </div>
           </div>
+          <div class="w3-container" style="position: relative;z-index:-10">
+            <img src="bird2.PNG" class="w3-display-topmiddle w3-margin w3-opacity" alt="TWITBOOK logo" style="max-width:400px;max-height:400px;z-index: -10">
+        </div>
 </body>
 
 </html>

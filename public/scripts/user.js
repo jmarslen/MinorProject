@@ -7,14 +7,18 @@ var userCheck = function (username, password) {
             password: password
         },
         success: function (data) {
+            console.log(data);
             if ($.cookie('marzuser') === undefined){
                 $.cookie('marzuser', data.value.username, { expires: 7, path: '/' });
+                $.cookie('marzname', data.value.fullname, { expires: 7, path: '/'});
                 window.location = 'container.html';
-            } else if ($.cookie('marzuser') === data.value.username) {
+            } else if ($.cookie('marzuser') === data.value.username && $.cookie('marzname') === data.value.fullname) {
                 window.location = 'container.html';
             } else {
                 $.removeCookie('marzuser');
+                $.removeCookie('marzname');
                 $.cookie('marzuser', data.value.username, { expires: 7, path: '/' });
+                $.cookie('marzname', data.value.fullname, { expires: 7, path: '/'});
                 window.location = 'container.html';
             }
         },
@@ -45,12 +49,20 @@ var validateNewUser = function(username, password) {
         })
 }
 
+function usernameValidation(username) {
+    var regex = /^[\w\.]+\@[\w\.]+\.[\w\.]+/;
+    return regex.test(username);
+}
+
 var createUser = function() {
     var username = $('#newusername').val();
     var fullname = $('#newfullname').val();
     var password = $('#newpassword').val();
+    var validusr = usernameValidation(username);
+    var image = $('#sampleFile').val();
     var exists;
-    if (username.length > 2 && fullname.length > 2 && password.length > 3){
+    
+    if (validusr && image.length > 0 && username.length > 2 && fullname.length > 2 && password.length > 3){
         var check = validateNewUser(username, password).then(function(resolve){
             exists = resolve;
         });
@@ -76,6 +88,26 @@ var createUser = function() {
     }
 }
 
+function uploadFilePic(user) {
+    var data = new FormData($('#newForm')[0]);
+    data.append('username', user);
+    $.ajax({
+        url: '/upload',
+        type: 'POST',
+        encType: 'multipart/form-data',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function() {
+            console.log('Profile Pic uploaded');
+        },
+        error: function() {
+
+        }
+    });
+}
+
 var addUserToDB = function(username, fullname, password){
         $.ajax({
         url: '/user/addUser',
@@ -86,6 +118,7 @@ var addUserToDB = function(username, fullname, password){
             password: password
         },
         success: function (data) {
+            uploadFilePic($('#newusername').val());
             $('#newusername').val('');
             $('#newfullname').val('');
             $('#newpassword').val('');

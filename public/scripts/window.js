@@ -51,16 +51,74 @@ function displayFollowing() {
     })
 
 }
-function addFollower() {
+
+function getRemoveFollowData() {
+    var data = {followers: []};
+    var promise =  new Promise(function(reject,resolve){
+        return $('#followingContent').find('input[type="checkbox"]:checked').each(function () {
+            data.followers.push({
+            "username": $(this).next().text().trim()
+        })
+        })})
+        promise.then(removeFollowing(data));
+}
+
+function removeFollowing(info){
+    var user = $.cookie('marzuser');
+    $.ajax({
+        url: '/user/removeFollowing',
+        type: 'put',
+        data: {
+            user: user,
+            following: info
+        },
+        success: function (data) {
+            document.getElementById('following').style.display='none';
+            loadPosts();
+            swal({
+                title: "Success!",
+                text: "Users Removed!",
+                type: "success",
+                confirmButtonText: "WooHoo..."
+              });
+        },
+        error: function (err) {
+            $('#successText').text("Following failed");
+        }
+    })
+
+}
+
+function getFollowingData(){
+    var data = {followers: []};
+    var promise =  new Promise(function(reject,resolve){
+        return $('#findContent').find('input[type="checkbox"]:checked').each(function () {
+            data.followers.push({
+            "username": $(this).next().text().trim()
+        })
+        })})
+
+        promise.then(addFollowing(data));
+}
+
+function addFollowing(info) {
     var user = $.cookie('marzuser');
     $.ajax({
         url: '/user/addFollowing',
         type: 'put',
         data: {
-            user: user
+            user: user,
+            following: info
         },
         success: function (data) {
-            console.log('Following');
+            document.getElementById('find').style.display='none';
+            loadPosts();
+            swal({
+                title: "Success!",
+                text: "Users Added!",
+                type: "success",
+                confirmButtonText: "WooHoo..."
+              });
         },
         error: function (err) {
             $('#successText').text("Following failed");
@@ -71,12 +129,13 @@ function addFollower() {
 var searchList;
 function performSearch(value) {
     $.each(searchList, function(n, user){
-        if (user.value.indexOf(value) >= 0 && value.length > 2){
+        if (user.value.indexOf(value) != -1 && value.length > 2){
             $('#findContent').html('');
             $('#findContent').append('<input class="w3-check w3-padding" type="checkbox"><label> ' + user.value+' </label><br />');
         } 
     })
 }
+
 
 function viewUsers() {
     return new Promise(function(resolve, reject) {
