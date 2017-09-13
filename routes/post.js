@@ -11,7 +11,6 @@ var marz = nano.db.use('db');
 var router = express.Router();
 
 router.get('/getPost', function (req, res) {
-    console.log('post');
     marz.get('_design/post/_view/post', function(err, body) {
         if (!err) {
             res.send(body);  
@@ -51,5 +50,15 @@ router.get('/newPost', function (req, res) {
         }
     })
 });
-
+router.get('/followingProfile', function (req, res){
+    marz.get('_design/post/_view/post?key="' + req.query.user + '"', function(err, body) {
+        if (!err) {
+            res.send(body);  
+        } else {
+            res.status(404);
+            res.send({success: false});
+            console.log(err);
+        }
+    });
+})
 module.exports = router;

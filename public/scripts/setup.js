@@ -11,9 +11,9 @@ function createPost(name, msg, fullname, image) {
 '<div class="w3-container w3-border w3-light-gray">' +
 '  <h2>' + messg + '</h2>' +
 '</div>' +
-'<footer class="w3-container w3-border">' +
-    '<h5 style="float: left">Like |</h5>' +
-    '<h5>| Comment</h5>' +
+'<footer class="w3-container w3-border" style="height: 20px">' +
+/*     '<h5 style="float: left">Like |</h5>' +
+    '<h5>| Comment</h5>' + */
 '</footer>' +
 '</div>'
 }
@@ -30,9 +30,9 @@ function initiatePosts(name, msg, date, fullname, image) {
 '<div class="w3-container w3-border w3-light-gray">' +
 '  <h2>' + messg + '</h2>' +
 '</div>' +
-'<footer class="w3-container w3-border">' +
-    '<h5 style="float: left">Like |</h5>' +
-    '<h5>| Comment</h5>' +
+'<footer class="w3-container w3-border" style="height: 20px">' +
+/*     '<h5 style="float: left">Like |</h5>' +
+    '<h5>| Comment</h5>' + */
 '</footer>' +
 '</div>')
 }
@@ -47,8 +47,8 @@ function loadPosts(){
 }
 
 function compare(a,b) {
-    var dateA = new Date(a.value.date);
-    var dateB = new Date(b.value.date);
+    var dateA = new Date(a.value.date).getTime();
+    var dateB = new Date(b.value.date).getTime();
     if (dateA < dateB)
         return -1;
     if (dateA > dateB)

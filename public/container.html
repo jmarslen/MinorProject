@@ -55,9 +55,9 @@
               <form ref='uploadForm' id='uploadForm'>
                 <br />
                 <label class="w3-margin">Username</label>
-                <input class="w3-input w3-margin" type="text" name"username" id="username" disabled>
+                <input class="w3-input w3-margin" type="text" name="username" id="username" disabled>
                 <label class="w3-margin">Full Name</label>
-                <input class="w3-input w3-margin" type="text" name"fullname" id="fullname" disabled>
+                <input class="w3-input w3-margin" type="text" name="fullname" id="fullname" disabled>
                 <label class="w3-margin">Profile Picture (Must be .jpg)</label><br/><br/>
                 <input class="w3-button" type="file" name="sampleFile" /> <br /><br />
                 <input class="w3-button w3-blue w3-margin" type='submit' value='Upload!' />
@@ -85,7 +85,7 @@
               <span onclick="document.getElementById('find').style.display='none'" class="w3-button w3-display-topright">&times;</span>
               <h2>User Search</h2>
           </header>
-          <input class="w3-input" type="text" name"usersearchinput" id="usersearchinput" placeholder="Search..."><br/>
+          <input class="w3-input" type="text" name="usersearchinput" id="usersearchinput" placeholder="Search..."><br/>
           <div id="findContent" class="w3-container">
           </div>
           <br />
@@ -93,6 +93,26 @@
           <div id="suggestedFollows"></div>
         <footer class="w3-container w3-blue">TWITBOOK</footer>
       </div>
+    </div>
+    <div id="viewFollowing" class="w3-modal" style="z-index:20">
+      <div class="w3-modal-content w3-animate-top">
+          <header class="w3-container w3-blue">
+              <span onclick="document.getElementById('viewFollowing').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+              <h2>Profile</h2>
+          </header>
+          <div id="viewFollowingContent" class="w3-container">
+            <label>Username</label><br/>
+            <input class="w3-input" id="followingUsername" disabled/>
+            <label>Full Name</label><br/>
+            <input class="w3-input" id="followingFullname" disabled/>
+            <label>Posts</label>
+            <div class="w3-container" id="viewFollowPosts"></div>
+          </div>
+          <br />
+        <footer class="w3-container w3-blue">TWITBOOK</footer>
+      </div>
+    </div>    
+  </div>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="scripts/jquery.cookie/jquery.cookie.js"></script>
