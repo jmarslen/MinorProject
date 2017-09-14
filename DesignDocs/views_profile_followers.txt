@@ -1,0 +1,7 @@
+function(doc) {
+   if(doc.type == "profile") {
+      for (var curFollower in doc.followers) {
+        emit(doc.username, {"username":doc.followers[curFollower].username});
+      }
+  }
+}

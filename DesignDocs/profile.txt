@@ -1,0 +1,19 @@
+{
+  "_id": "_design/profile",
+  "_rev": "5-0d038ed0ba550c01e03756d88f68ca12",
+  "views": {
+    "profile": {
+      "map": "function (doc) {\n  if (doc.type === \"profile\")\n  emit(doc.username, doc);\n}"
+    },
+    "followers": {
+      "map": "function(doc) {\r\n   if(doc.type == \"profile\") {\r\n      for (var curFollower in doc.followers) {\r\n        emit(doc.username, {\"username\":doc.followers[curFollower].username});\r\n      }\r\n  }\r\n}"
+    },
+    "following": {
+      "map": "function(doc) {\r\n   if(doc.type == \"profile\") {\r\n      for (var curFollower in doc.following) {\r\n        emit(doc.following[curFollower].username, {\"username\":doc.username, \"fullname\":doc.fullname});\r\n        \r\n      }\r\n  }\r\n}"
+    },
+    "users": {
+      "map": "function (doc) {\n  if (doc.type === \"profile\")\n  emit(doc.username, doc.username);\n}"
+    }
+  },
+  "language": "javascript"
+}
