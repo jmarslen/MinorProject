@@ -1,3 +1,4 @@
+//View logged in users profile
 function viewProfile() {
     var username = $.cookie('marzuser');
         $.ajax({
@@ -17,7 +18,7 @@ function viewProfile() {
         })
 
 } 
-
+//Get the list of users following
 function viewFollowing() {
         var username = $.cookie('marzuser');
         return new Promise(function(resolve, reject) {
@@ -36,7 +37,7 @@ function viewFollowing() {
         })
         })
 }
-
+//Display a list of users following
 function displayFollowing() {
     var userList;
     var list = viewFollowing().then(function(resolve){
@@ -51,7 +52,7 @@ function displayFollowing() {
     })
 
 }
-
+//Get list of users to unfollow
 function getRemoveFollowData() {
     var data = {followers: []};
     var promise =  new Promise(function(reject,resolve){
@@ -62,7 +63,7 @@ function getRemoveFollowData() {
         })})
         promise.then(removeFollowing(data));
 }
-
+//remove following from the user profile
 function removeFollowing(info){
     var user = $.cookie('marzuser');
     $.ajax({
@@ -88,7 +89,7 @@ function removeFollowing(info){
     })
 
 }
-
+//Get the selected users to unfollow
 function getFollowingData(){
     var data = {followers: []};
     var promise =  new Promise(function(reject,resolve){
@@ -100,7 +101,7 @@ function getFollowingData(){
 
         promise.then(addFollowing(data));
 }
-
+//Add new followed user
 function addFollowing(info) {
     var user = $.cookie('marzuser');
     $.ajax({
@@ -125,7 +126,7 @@ function addFollowing(info) {
         }
     })
 }
-
+//Search for a user
 var searchList;
 function performSearch(value) {
     $.each(searchList, function(n, user){
@@ -135,8 +136,7 @@ function performSearch(value) {
         } 
     })
 }
-
-
+//Get list of all users
 function viewUsers() {
     return new Promise(function(resolve, reject) {
         $.ajax({
@@ -152,7 +152,7 @@ function viewUsers() {
         })
     })
 }
-
+//Display the list of users
 function getUserList() {
     var list = viewUsers().then(function(resolve){
             searchList = resolve;
@@ -165,7 +165,7 @@ function getUserList() {
         document.getElementById('find').style.display='block';
     })
 }
-
+//View posts from a particular followed user
 function appendFollowPosts(name, msg, date, fullname, image){
     var messg = messageValidation(msg);
     $('#viewFollowPosts').append('<div class="w3-card-4 w3-margin">' + 
@@ -184,7 +184,7 @@ function appendFollowPosts(name, msg, date, fullname, image){
 '</footer>' +
 '</div>')
 }
-
+//Gets the data to display the followed users posts
 function viewFollowingProfile(username) {
     console.log(username);
     $("#followingUsername").val('');

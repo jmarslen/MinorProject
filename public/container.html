@@ -37,14 +37,16 @@
   </div>
 </nav>
     <button class="w3-blue w3-button w3-round-xxlarge w3-hover-black" id="newPosts" onclick="newPost()" style="position: fixed; top: 100px; margin-left: 50%; z-index: 15; display: none;">New Posts</button>
+    <!-- Main section -->
     <div id="messages"></div>
     <div class="w3-blue w3-bottom w3-border" id="PostForm">
       <form action="" id="form">
         <textarea class="w3-input" placeholder="What do you have to say?" type="text" id="m" maxlength="140"></textarea><button class="w3-button w3-blue w3-block">Post</button>
       </form>
     </div>
-
+<!-- Modal content -->
     <div id="Modals">
+      <!--Profile Modal-->
       <div id="profile" class="w3-modal">
         <div class="w3-modal-content w3-animate-top">
           <header class="w3-container w3-blue">
@@ -59,13 +61,14 @@
                 <label class="w3-margin">Full Name</label>
                 <input class="w3-input w3-margin" type="text" name="fullname" id="fullname" disabled>
                 <label class="w3-margin">Profile Picture (Must be .jpg)</label><br/><br/>
-                <input class="w3-button" type="file" name="sampleFile" /> <br /><br />
+                <input class="w3-button" type="file" name="proPic" /> <br /><br />
                 <input class="w3-button w3-blue w3-margin" type='submit' value='Upload!' />
             </form>  
             </div>
           <footer class="w3-container w3-blue">TWITBOOK</footer>
         </div>
     </div>
+    <!--Following Modal-->
       <div id="following" class="w3-modal">
     <div class="w3-modal-content w3-animate-top">
       <header class="w3-container w3-blue">
@@ -79,6 +82,7 @@
       <footer class="w3-container w3-blue">TWITBOOK</footer>
     </div>
     </div>
+    <!--Find other users modal-->
     <div id="find" class="w3-modal">
       <div class="w3-modal-content w3-animate-top">
           <header class="w3-container w3-blue">
@@ -94,6 +98,7 @@
         <footer class="w3-container w3-blue">TWITBOOK</footer>
       </div>
     </div>
+    <!--View users followed profile-->
     <div id="viewFollowing" class="w3-modal" style="z-index:20">
       <div class="w3-modal-content w3-animate-top">
           <header class="w3-container w3-blue">
@@ -121,6 +126,7 @@
     <script type="text/javascript" src="scripts/setup.js"></script>
     <script type="text/javascript" src="scripts/window.js"></script>
     <script>
+      //Setup main functions
       $(document).ready(function(){
         getUsername();
         getFullName();
@@ -131,6 +137,7 @@
       var userImage;
       $(function () {
         var socket = io();
+        //Load all saved posts
         loadPosts();
         var userList;
 
@@ -138,28 +145,28 @@
         var list = userfollowlist().then(function(resolve){
             userList = resolve.value.following;
         });
-        
+        //Get users profile picture
         var pic = getProfilePic().then(function(resolve){
           userImage = resolve;
         })
+        //upload profile picture on submit
         $('#uploadForm').submit(function(){
           uploadFile();
           return false;
         });
-
+        //Main function which emits the 'new post message back to the server'
         $('#form').submit(function(){
           let usr = getUsername();
           let name = getName();
-          console.log(userImage);
           if ($('#m').val().length > 0){
-            socket.emit('chat message', $('#m').val(), usr, name, userImage);
+            socket.emit('new post', $('#m').val(), usr, name, userImage);
             writeNewPostToDB(usr, $('#m').val(), name, userImage);
             $('#m').val('');
             return false;
           }
         });
-
-        socket.on('chat message', function(msg, usr, name, userImage){
+        //Listens for new posts, checks the user follows them.
+        socket.on('new post', function(msg, usr, name, userImage){
                 $.each(userList, function(n, user){
                    if (user.username === usr){
                       $("#newPosts").show();

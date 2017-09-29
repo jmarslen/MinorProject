@@ -1,3 +1,4 @@
+//Writes post to the top of the page when new posts are submitted
 function createPost(name, msg, fullname, image) {
     var date = new Date().toLocaleString();
     var messg = messageValidation(msg);
@@ -12,12 +13,10 @@ function createPost(name, msg, fullname, image) {
 '  <h2>' + messg + '</h2>' +
 '</div>' +
 '<footer class="w3-container w3-border" style="height: 20px">' +
-/*     '<h5 style="float: left">Like |</h5>' +
-    '<h5>| Comment</h5>' + */
 '</footer>' +
 '</div>'
 }
-
+//Used to display posts on page load
 function initiatePosts(name, msg, date, fullname, image) {
     var messg = messageValidation(msg);
     $('#messages').append('<div class="w3-card-4 w3-margin">' + 
@@ -31,12 +30,10 @@ function initiatePosts(name, msg, date, fullname, image) {
 '  <h2>' + messg + '</h2>' +
 '</div>' +
 '<footer class="w3-container w3-border" style="height: 20px">' +
-/*     '<h5 style="float: left">Like |</h5>' +
-    '<h5>| Comment</h5>' + */
 '</footer>' +
 '</div>')
 }
-
+//Loads posts on page load
 function loadPosts(){
     var list = userfollowlist().then(function(resolve){
         userList = resolve.value.following;
@@ -45,7 +42,7 @@ function loadPosts(){
       getPosts(userList);
     })
 }
-
+//Date comparison function to sort the posts by date
 function compare(a,b) {
     var dateA = new Date(a.value.date).getTime();
     var dateB = new Date(b.value.date).getTime();
@@ -55,7 +52,7 @@ function compare(a,b) {
         return 1;
     return 0;
 }
-
+//Gets posts from the database
 function getPosts(userList) {
     $('#messages').html('');
     $.ajax({
@@ -83,17 +80,16 @@ function getPosts(userList) {
         }
     })
 }
-
+//Gets the username of the user
 function getUsername() {
     var user = $.cookie('marzuser');
     if (user !== undefined) {
-        //$('#user').html(user);
          return user;
     } else {
         window.location = 'index.html';
     }
 }
-
+//Gets the name of the user
 function getName() {
     let name = $.cookie('marzname');
     if (name !== undefined){
@@ -102,7 +98,7 @@ function getName() {
         return window.location = 'index.html'
     }
 }
-
+//Get the profile picture of the logged in user
 function getProfilePic() {
     var username = $.cookie('marzuser');
     return new Promise(function(resolve, reject) {
@@ -122,7 +118,7 @@ function getProfilePic() {
     })
 })
 }
-
+//Get the full name of the user
 function getFullName() {
     var username = $.cookie('marzuser');
     $.ajax({
@@ -132,11 +128,7 @@ function getFullName() {
             username: username
         },
         success: function (data) {
-            console.log(data);
-
             $('#user').html(data.value.fullname);
-            //$('#fullname').val(data.value.fullname);
-            //document.getElementById('profile').style.display='block';
             return data.value.fullname;
         },
         error: function (err) {
@@ -144,7 +136,7 @@ function getFullName() {
         }
     })
 }
-
+//Write new posts to the database
 function writeNewPostToDB(usr, message, name, image) {
     var date = new Date().toLocaleString();
         $.ajax({
@@ -165,23 +157,27 @@ function writeNewPostToDB(usr, message, name, image) {
         }
     })
 }
+//The function looks for URL's in the message and creates them as a clickable link
 function messageValidation(msg){
-    //May need to reference this as it is not my regex
+    //This regex was sourced from stack overflow
     var urlRegex = /((?:(http|https|Http|Https|rtsp|Rtsp|file|rdp|ftp|Ftp):\/\/(?:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,64}(?:\:(?:[a-zA-Z0-9\$\-\_\.\+\!\*\'\(\)\,\;\?\&\=]|(?:\%[a-fA-F0-9]{2})){1,25})?\@)?)?((?:(?:[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}\.)+(?:(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])|(?:biz|b[abdefghijmnorstvwyz])|(?:cat|com|coop|c[acdfghiklmnoruvxyz])|d[ejkmoz]|(?:edu|e[cegrstu])|f[ijkmor]|(?:gov|g[abdefghilmnpqrstuwy])|h[kmnrtu]|(?:info|int|i[delmnoqrst])|(?:jobs|j[emop])|k[eghimnrwyz]|l[abcikrstuvy]|(?:mil|mobi|museum|m[acdghklmnopqrstuvwxyz])|(?:name|net|n[acefgilopruz])|(?:org|om)|(?:pro|p[aefghklmnrstwy])|qa|r[eouw]|s[abcdeghijklmnortuvyz]|(?:tel|travel|t[cdfghjklmnoprtvwz])|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw]))|(?:(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])))(?:\:\d{1,5})?)(\/(?:(?:[a-zA-Z0-9\;\/\?\:\@\&\=\#\~\-\.\+\!\*\'\(\)\,\_])|(?:\%[a-fA-F0-9]{2}))*)?(?:\b|$)/gi;
     return msg.replace(urlRegex, function(url) {
         return '<a href="' + url + '" target="_blank">' + url + '</a>';
     });
 }
+//Logout removes all cookies and returns user to login screen
 function logout() {
     $.removeCookie('marzuser');
+    $.removeCookie('marzname');
     window.location = 'index.html';
 }
+//Displays new post button when a user submits a post
 function newPost() {
     $("html, body").animate({ scrollTop: 0 }, "slow");
     $("#newPosts").hide();
     return false;
 }
-
+//Upload profile photo
 function uploadFile() {
     var user = $.cookie('marzuser');
     var data = new FormData($('#uploadForm')[0]);
