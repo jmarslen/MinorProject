@@ -1,3 +1,4 @@
+//Validates the users credentials
 var userCheck = function (username, password) {
     $.ajax({
         url: '/user/user',
@@ -7,7 +8,7 @@ var userCheck = function (username, password) {
             password: password
         },
         success: function (data) {
-            console.log(data);
+            //Determine if Cookies have been set
             if ($.cookie('marzuser') === undefined){
                 $.cookie('marzuser', data.value.username, { expires: 7, path: '/' });
                 $.cookie('marzname', data.value.fullname, { expires: 7, path: '/'});
@@ -27,10 +28,11 @@ var userCheck = function (username, password) {
         }
     })
 }
+//Displays the signup modal
 var displaySignup = function(){
     document.getElementById('createProfile').style.display='block';
 }
-
+//Checks to see if user exists
 var validateNewUser = function(username, password) {
     return new Promise(function(resolve, reject) {
         $.ajax({
@@ -50,10 +52,11 @@ var validateNewUser = function(username, password) {
 }
 
 function usernameValidation(username) {
+    //Regex to validate if email address used for username
     var regex = /^[\w\.]+\@[\w\.]+\.[\w\.]+/;
     return regex.test(username);
 }
-
+//Setup the create user, validate the fields, check if user exists
 var createUser = function() {
     var username = $('#newusername').val();
     var fullname = $('#newfullname').val();
@@ -87,7 +90,7 @@ var createUser = function() {
           });
     }
 }
-
+//Upload profile picture
 function uploadFilePic(user) {
     var data = new FormData($('#newForm')[0]);
     data.append('username', user);
@@ -107,7 +110,7 @@ function uploadFilePic(user) {
         }
     });
 }
-
+//Add new user to the database
 var addUserToDB = function(username, fullname, password){
         $.ajax({
         url: '/user/addUser',

@@ -1,0 +1,13 @@
+{
+  "_id": "_design/user",
+  "_rev": "2-32144226ec80fa0fdf72fba248e5f90b",
+  "views": {
+    "user": {
+      "map": "function (doc) {\n  if (doc.type == 'credentials'){\n  emit(doc.username, doc);\n  }\n}\n"
+    },
+    "users": {
+      "map": "function (doc) {\n  if (doc.type == 'credentials'){\n  emit(doc.username, doc);\n  }\n}\n"
+    }
+  },
+  "language": "javascript"
+}

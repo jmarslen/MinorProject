@@ -1,0 +1,10 @@
+{
+  "_id": "_design/post",
+  "_rev": "1-a1de70b85adfb68c6a22fc3edaea4ba0",
+  "views": {
+    "post": {
+      "map": "function (doc) {\n  if (doc.type == 'post'){\n  emit(doc.username, doc);\n  }\n}"
+    }
+  },
+  "language": "javascript"
+}

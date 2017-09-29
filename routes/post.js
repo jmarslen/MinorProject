@@ -1,17 +1,17 @@
-var cloudant = {
+var database = {
    url : "<url>"
 };
+//Setup database functions
 var host = "localhost";
 var port = 5984;
-cloudant.url = "http://" + host + ":" + port;
+database.url = "http://" + host + ":" + port;
 var express = require('express');
-var nano = require('nano')(cloudant.url);
+var nano = require('nano')(database.url);
 var path = require('path');
 var marz = nano.db.use('db');
 var router = express.Router();
-
+//Get posts from the database
 router.get('/getPost', function (req, res) {
-    console.log('post');
     marz.get('_design/post/_view/post', function(err, body) {
         if (!err) {
             res.send(body);  
@@ -22,7 +22,7 @@ router.get('/getPost', function (req, res) {
         }
     });
 });
-
+//insert new posts into database
 router.get('/newPost', function (req, res) {
     marz.insert({
     "type": "post",
@@ -51,5 +51,16 @@ router.get('/newPost', function (req, res) {
         }
     })
 });
-
+//Get the profile of someone user is following
+router.get('/followingProfile', function (req, res){
+    marz.get('_design/post/_view/post?key="' + req.query.user + '"', function(err, body) {
+        if (!err) {
+            res.send(body);  
+        } else {
+            res.status(404);
+            res.send({success: false});
+            console.log(err);
+        }
+    });
+})
 module.exports = router;

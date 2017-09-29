@@ -37,14 +37,16 @@
   </div>
 </nav>
     <button class="w3-blue w3-button w3-round-xxlarge w3-hover-black" id="newPosts" onclick="newPost()" style="position: fixed; top: 100px; margin-left: 50%; z-index: 15; display: none;">New Posts</button>
+    <!-- Main section -->
     <div id="messages"></div>
     <div class="w3-blue w3-bottom w3-border" id="PostForm">
       <form action="" id="form">
         <textarea class="w3-input" placeholder="What do you have to say?" type="text" id="m" maxlength="140"></textarea><button class="w3-button w3-blue w3-block">Post</button>
       </form>
     </div>
-
+<!-- Modal content -->
     <div id="Modals">
+      <!--Profile Modal-->
       <div id="profile" class="w3-modal">
         <div class="w3-modal-content w3-animate-top">
           <header class="w3-container w3-blue">
@@ -55,17 +57,18 @@
               <form ref='uploadForm' id='uploadForm'>
                 <br />
                 <label class="w3-margin">Username</label>
-                <input class="w3-input w3-margin" type="text" name"username" id="username" disabled>
+                <input class="w3-input w3-margin" type="text" name="username" id="username" disabled>
                 <label class="w3-margin">Full Name</label>
-                <input class="w3-input w3-margin" type="text" name"fullname" id="fullname" disabled>
+                <input class="w3-input w3-margin" type="text" name="fullname" id="fullname" disabled>
                 <label class="w3-margin">Profile Picture (Must be .jpg)</label><br/><br/>
-                <input class="w3-button" type="file" name="sampleFile" /> <br /><br />
+                <input class="w3-button" type="file" name="proPic" /> <br /><br />
                 <input class="w3-button w3-blue w3-margin" type='submit' value='Upload!' />
             </form>  
             </div>
           <footer class="w3-container w3-blue">TWITBOOK</footer>
         </div>
     </div>
+    <!--Following Modal-->
       <div id="following" class="w3-modal">
     <div class="w3-modal-content w3-animate-top">
       <header class="w3-container w3-blue">
@@ -79,13 +82,14 @@
       <footer class="w3-container w3-blue">TWITBOOK</footer>
     </div>
     </div>
+    <!--Find other users modal-->
     <div id="find" class="w3-modal">
       <div class="w3-modal-content w3-animate-top">
           <header class="w3-container w3-blue">
               <span onclick="document.getElementById('find').style.display='none'" class="w3-button w3-display-topright">&times;</span>
               <h2>User Search</h2>
           </header>
-          <input class="w3-input" type="text" name"usersearchinput" id="usersearchinput" placeholder="Search..."><br/>
+          <input class="w3-input" type="text" name="usersearchinput" id="usersearchinput" placeholder="Search..."><br/>
           <div id="findContent" class="w3-container">
           </div>
           <br />
@@ -93,6 +97,27 @@
           <div id="suggestedFollows"></div>
         <footer class="w3-container w3-blue">TWITBOOK</footer>
       </div>
+    </div>
+    <!--View users followed profile-->
+    <div id="viewFollowing" class="w3-modal" style="z-index:20">
+      <div class="w3-modal-content w3-animate-top">
+          <header class="w3-container w3-blue">
+              <span onclick="document.getElementById('viewFollowing').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+              <h2>Profile</h2>
+          </header>
+          <div id="viewFollowingContent" class="w3-container">
+            <label>Username</label><br/>
+            <input class="w3-input" id="followingUsername" disabled/>
+            <label>Full Name</label><br/>
+            <input class="w3-input" id="followingFullname" disabled/>
+            <label>Posts</label>
+            <div class="w3-container" id="viewFollowPosts"></div>
+          </div>
+          <br />
+        <footer class="w3-container w3-blue">TWITBOOK</footer>
+      </div>
+    </div>    
+  </div>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="scripts/jquery.cookie/jquery.cookie.js"></script>
@@ -101,6 +126,7 @@
     <script type="text/javascript" src="scripts/setup.js"></script>
     <script type="text/javascript" src="scripts/window.js"></script>
     <script>
+      //Setup main functions
       $(document).ready(function(){
         getUsername();
         getFullName();
@@ -111,6 +137,7 @@
       var userImage;
       $(function () {
         var socket = io();
+        //Load all saved posts
         loadPosts();
         var userList;
 
@@ -118,28 +145,28 @@
         var list = userfollowlist().then(function(resolve){
             userList = resolve.value.following;
         });
-        
+        //Get users profile picture
         var pic = getProfilePic().then(function(resolve){
           userImage = resolve;
         })
+        //upload profile picture on submit
         $('#uploadForm').submit(function(){
           uploadFile();
           return false;
         });
-
+        //Main function which emits the 'new post message back to the server'
         $('#form').submit(function(){
           let usr = getUsername();
           let name = getName();
-          console.log(userImage);
           if ($('#m').val().length > 0){
-            socket.emit('chat message', $('#m').val(), usr, name, userImage);
+            socket.emit('new post', $('#m').val(), usr, name, userImage);
             writeNewPostToDB(usr, $('#m').val(), name, userImage);
             $('#m').val('');
             return false;
           }
         });
-
-        socket.on('chat message', function(msg, usr, name, userImage){
+        //Listens for new posts, checks the user follows them.
+        socket.on('new post', function(msg, usr, name, userImage){
                 $.each(userList, function(n, user){
                    if (user.username === usr){
                       $("#newPosts").show();

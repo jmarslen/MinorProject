@@ -1,3 +1,4 @@
+//Gets a list of users followed
 function userfollowlist() {
         var username = $.cookie('marzuser');
         var returnData;

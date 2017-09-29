@@ -1,3 +1,4 @@
+//View logged in users profile
 function viewProfile() {
     var username = $.cookie('marzuser');
         $.ajax({
@@ -17,7 +18,7 @@ function viewProfile() {
         })
 
 } 
-
+//Get the list of users following
 function viewFollowing() {
         var username = $.cookie('marzuser');
         return new Promise(function(resolve, reject) {
@@ -36,7 +37,7 @@ function viewFollowing() {
         })
         })
 }
-
+//Display a list of users following
 function displayFollowing() {
     var userList;
     var list = viewFollowing().then(function(resolve){
@@ -45,13 +46,13 @@ function displayFollowing() {
     list.then(function(){
     $("#followingContent").html("");
         $.each(userList, function(n, user){
-            $('#followingContent').append('<input class="w3-check w3-padding" type="checkbox"><label> ' + user.username+' </label><br />');
+            $('#followingContent').append('<input class="w3-check w3-padding" type="checkbox"/><button class="w3-button" onclick="viewFollowingProfile(&#39' + user.username + '&#39)"> ' + user.username +' </button><br />');
         })
         document.getElementById('following').style.display='block';
     })
 
 }
-
+//Get list of users to unfollow
 function getRemoveFollowData() {
     var data = {followers: []};
     var promise =  new Promise(function(reject,resolve){
@@ -62,7 +63,7 @@ function getRemoveFollowData() {
         })})
         promise.then(removeFollowing(data));
 }
-
+//remove following from the user profile
 function removeFollowing(info){
     var user = $.cookie('marzuser');
     $.ajax({
@@ -88,7 +89,7 @@ function removeFollowing(info){
     })
 
 }
-
+//Get the selected users to unfollow
 function getFollowingData(){
     var data = {followers: []};
     var promise =  new Promise(function(reject,resolve){
@@ -100,7 +101,7 @@ function getFollowingData(){
 
         promise.then(addFollowing(data));
 }
-
+//Add new followed user
 function addFollowing(info) {
     var user = $.cookie('marzuser');
     $.ajax({
@@ -125,7 +126,7 @@ function addFollowing(info) {
         }
     })
 }
-
+//Search for a user
 var searchList;
 function performSearch(value) {
     $.each(searchList, function(n, user){
@@ -135,8 +136,7 @@ function performSearch(value) {
         } 
     })
 }
-
-
+//Get list of all users
 function viewUsers() {
     return new Promise(function(resolve, reject) {
         $.ajax({
@@ -152,7 +152,7 @@ function viewUsers() {
         })
     })
 }
-
+//Display the list of users
 function getUserList() {
     var list = viewUsers().then(function(resolve){
             searchList = resolve;
@@ -165,6 +165,56 @@ function getUserList() {
         document.getElementById('find').style.display='block';
     })
 }
+//View posts from a particular followed user
+function appendFollowPosts(name, msg, date, fullname, image){
+    var messg = messageValidation(msg);
+    $('#viewFollowPosts').append('<div class="w3-card-4 w3-margin">' + 
+'<header class="w3-container w3-border">' +
+'<img src="Profile/' + image + '" alt="Avatar" class="w3-left w3-circle w3-margin" style="width: 80px; height: 80px;">' +
+  '<h3 class="w3-margin">' + fullname + '</h3>' +
+  '<p class="w3-tiny w3-left">' + name + '</p>' +
+  '<p class="w3-tiny w3-right">' + date + '</p>' +
+'</header>' +
+'<div class="w3-container w3-border w3-light-gray">' +
+'  <h2>' + messg + '</h2>' +
+'</div>' +
+'<footer class="w3-container w3-border" style="height: 20px">' +
+/*     '<h5 style="float: left">Like |</h5>' +
+    '<h5>| Comment</h5>' + */
+'</footer>' +
+'</div>')
+}
+//Gets the data to display the followed users posts
+function viewFollowingProfile(username) {
+    console.log(username);
+    $("#followingUsername").val('');
+    $("#followingFullname").val('');
+    $("#viewFollowPosts").html("");
+    $.ajax({
+        url: '/post/followingProfile',
+        type: 'get',
+        data: {
+            user: username
+        },
+        success: function (data) {
+            var posts = data.rows;
+            posts.sort(compare).reverse();
+            $("#followingUsername").val(posts[0].value.username);
+            $("#followingFullname").val(posts[0].value.fullname);
+           $.each(posts, function(i, post){
+               var usr = post.value.username;
+               var msg = post.value.post.message;
+               var date = post.value.date;
+               var fullname = post.value.fullname;
+               var image = post.value.profileImage;
+               appendFollowPosts(usr, msg, date, fullname, image)
 
-
+           })
+           document.getElementById('viewFollowing').style.display='block';
+        },
+        error: function (err) {
+           
+        }
+    })
+}
 
