@@ -202,6 +202,7 @@ router.put('/removeFollowing', function(req, res){
             "type": "profile",
             "username": resolve.value.username,
             "fullname": resolve.value.fullname,
+            "profileImage": resolve.value.profileImage,
             "myposts": [],
             "following":
                 currentData

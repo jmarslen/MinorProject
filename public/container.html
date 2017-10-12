@@ -31,7 +31,6 @@
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
     <button onclick="viewProfile()" class="w3-button"><i class="fa fa-user  fa-fw"></i>  Profile</button><br/>
     <button onclick="displayFollowing()" class="w3-button"><i class="fa fa-users fa-fw"></i>  Following</button><br/>
-    <button onclick="displayFollowers()" class="w3-button"><i class="fa fa-users fa-fw"></i>  Followers</button><br/>
     <button onclick="getUserList()" class="w3-button"><i class="fa fa-search fa-fw"></i>  Find</button><br/>
     <button onclick="logout()" class="w3-button"><i class="fa fa-power-off fa-fw"></i>  Logout</button><br />
   </div>
@@ -65,7 +64,7 @@
                 <input class="w3-button w3-blue w3-margin" type='submit' value='Upload!' />
             </form>  
             </div>
-          <footer class="w3-container w3-blue">TWITBOOK</footer>
+          <footer class="w3-container w3-blue">CSE3MIP</footer>
         </div>
     </div>
     <!--Following Modal-->
@@ -79,7 +78,7 @@
         </div>
         <div id="suggestedFollows"></div>
         <button class="w3-button w3-margin w3-blue" onclick="getRemoveFollowData()">Remove?</button>
-      <footer class="w3-container w3-blue">TWITBOOK</footer>
+      <footer class="w3-container w3-blue">CSE3MIP</footer>
     </div>
     </div>
     <!--Find other users modal-->
@@ -95,7 +94,7 @@
           <br />
           <button class="w3-button w3-blue w3-margin" onclick='getFollowingData()'>Follow</button>
           <div id="suggestedFollows"></div>
-        <footer class="w3-container w3-blue">TWITBOOK</footer>
+        <footer class="w3-container w3-blue">CSE3MIP</footer>
       </div>
     </div>
     <!--View users followed profile-->
@@ -114,7 +113,7 @@
             <div class="w3-container" id="viewFollowPosts"></div>
           </div>
           <br />
-        <footer class="w3-container w3-blue">TWITBOOK</footer>
+        <footer class="w3-container w3-blue">CSE3MIP</footer>
       </div>
     </div>    
   </div>
@@ -134,17 +133,18 @@
           performSearch($(this).val());
         })
       }) 
-      var userImage;
       $(function () {
         var socket = io();
         //Load all saved posts
         loadPosts();
         var userList;
+        var userImage;
 
-        //Get posts for followed Users
+        //Get list of followed Users
         var list = userfollowlist().then(function(resolve){
             userList = resolve.value.following;
         });
+
         //Get users profile picture
         var pic = getProfilePic().then(function(resolve){
           userImage = resolve;
@@ -167,6 +167,7 @@
         });
         //Listens for new posts, checks the user follows them.
         socket.on('new post', function(msg, usr, name, userImage){
+
                 $.each(userList, function(n, user){
                    if (user.username === usr){
                       $("#newPosts").show();
@@ -176,6 +177,8 @@
                 })
         })
       });
+
+
       // Get the Sidebar
       var mySidebar = document.getElementById("mySidebar");
 
