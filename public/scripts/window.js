@@ -129,9 +129,9 @@ function addFollowing(info) {
 //Search for a user
 var searchList;
 function performSearch(value) {
+    $('#findContent').html('');
     $.each(searchList, function(n, user){
-        if (user.value.indexOf(value) != -1 && value.length > 2){
-            $('#findContent').html('');
+        if (user.value.indexOf(value) != -1){
             $('#findContent').append('<input class="w3-check w3-padding" type="checkbox"><label> ' + user.value+' </label><br />');
         } 
     })
