@@ -62,7 +62,7 @@ var createUser = function() {
     var fullname = $('#newfullname').val();
     var password = $('#newpassword').val();
     var validusr = usernameValidation(username);
-    var image = $('#sampleFile').val();
+    var image = $('#proPic').val();
     var exists;
     
     if (validusr && image.length > 0 && username.length > 2 && fullname.length > 2 && password.length > 3){

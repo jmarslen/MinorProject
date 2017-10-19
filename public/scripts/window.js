@@ -129,9 +129,9 @@ function addFollowing(info) {
 //Search for a user
 var searchList;
 function performSearch(value) {
+    $('#findContent').html('');
     $.each(searchList, function(n, user){
-        if (user.value.indexOf(value) != -1 && value.length > 2){
-            $('#findContent').html('');
+        if (user.value.indexOf(value) != -1){
             $('#findContent').append('<input class="w3-check w3-padding" type="checkbox"><label> ' + user.value+' </label><br />');
         } 
     })
@@ -167,7 +167,6 @@ function getUserList() {
 }
 //View posts from a particular followed user
 function appendFollowPosts(name, msg, date, fullname, image){
-    var messg = messageValidation(msg);
     $('#viewFollowPosts').append('<div class="w3-card-4 w3-margin">' + 
 '<header class="w3-container w3-border">' +
 '<img src="Profile/' + image + '" alt="Avatar" class="w3-left w3-circle w3-margin" style="width: 80px; height: 80px;">' +
@@ -176,11 +175,9 @@ function appendFollowPosts(name, msg, date, fullname, image){
   '<p class="w3-tiny w3-right">' + date + '</p>' +
 '</header>' +
 '<div class="w3-container w3-border w3-light-gray">' +
-'  <h2>' + messg + '</h2>' +
+'  <h2>' + msg + '</h2>' +
 '</div>' +
 '<footer class="w3-container w3-border" style="height: 20px">' +
-/*     '<h5 style="float: left">Like |</h5>' +
-    '<h5>| Comment</h5>' + */
 '</footer>' +
 '</div>')
 }
