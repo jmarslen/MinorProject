@@ -63,4 +63,16 @@ router.get('/followingProfile', function (req, res){
         }
     });
 })
+//Get the profile of someone user is following
+router.get('/getComments', function (req, res){
+    marz.get('_design/post/_view/comments?key="' + req.query._id + '"', function(err, body) {
+        if (!err) {
+            res.send(body);  
+        } else {
+            res.status(404);
+            res.send({success: false});
+            console.log(err);
+        }
+    });
+})
 module.exports = router;
